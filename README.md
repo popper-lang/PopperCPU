@@ -1,7 +1,7 @@
 # Welcome to the PopperCPU project! This readme provides an overview of the project, its purpose, and how to get started.
 
 # Table of Contents
-- [Introduction](https://github.com/popper-lang/PopperCPU/tree/main/README.md#introduction)
+- [Introduction](#introduction)
 - [Project Goals](https://github.com/popper-lang/PopperCPU/tree/main/README.md#projects-goals)
 - [Features](https://github.com/popper-lang/PopperCPU/tree/main/README.md#features)
 - [Getting Started with PopperCPU](https://github.com/popper-lang/PopperCPU/tree/main/README.md#getting-started-with-popper-cpu)
