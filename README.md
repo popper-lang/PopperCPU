@@ -1,14 +1,14 @@
 # Welcome to the PopperCPU project! This readme provides an overview of the project, its purpose, and how to get started.
 
 # Table of Contents
-- [Introduction](https://github.com/popper-lang/PopperCPU/blob/main/README.md#introduction)
-- [Project Goals](https://github.com/popper-lang/PopperCPU/blob/main/README.md#projects-goals)
-- [Features](https://github.com/popper-lang/PopperCPU/blob/main/README.md#features)
-- [Getting Started with PopperCPU](https://github.com/popper-lang/PopperCPU/blob/main/README.md#getting-started-with-popper-cpu)
-- [PopperASM - Assembling for PopperCPU](https://github.com/popper-lang/PopperCPU/blob/main/README.md#popperasm-assembling-for-poppercpu)
-- [Usage](https://github.com/popper-lang/PopperCPU/blob/main/README.md#usage)
-- [Contributing](https://github.com/popper-lang/PopperCPU/blob/main/README.md#contributing)
-- [License](https://github.com/popper-lang/PopperCPU/blob/main/README.md#license)
+- [Introduction](https://github.com/popper-lang/PopperCPU/tree/main/README.md#introduction)
+- [Project Goals](https://github.com/popper-lang/PopperCPU/tree/main/README.md#projects-goals)
+- [Features](https://github.com/popper-lang/PopperCPU/tree/main/README.md#features)
+- [Getting Started with PopperCPU](https://github.com/popper-lang/PopperCPU/tree/main/README.md#getting-started-with-popper-cpu)
+- [PopperASM - Assembling for PopperCPU](https://github.com/popper-lang/PopperCPU/tree/main/README.md#popperasm-assembling-for-poppercpu)
+- [Usage](https://github.com/popper-lang/PopperCPU/tree/main/README.md#usage)
+- [Contributing](https://github.com/popper-lang/PopperCPU/tree/main/README.md#contributing)
+- [License](https://github.com/popper-lang/PopperCPU/tree/main/README.md#license)
 # Introduction
 PopperCPU is a Rust-based project focused on creating a CPU architecture designed to execute programs written in PopperASM, an assembly language derived from the Popper-lang programming language. This project aims to provide a capable CPU architecture for interpreting and executing PopperASM programs efficiently.
 
