@@ -2,7 +2,7 @@
 
 # Table of Contents
 - [Introduction](#introduction)
-- [Project Goals](#projects-goals)
+- [Project Goals](#project-goals)
 - [Features](#features)
 - [Getting Started with PopperCPU](#getting-started-with-poppercpu)
 - [PopperASM - Assembling for PopperCPU](#popperasm---assembling-for-poppercpu)
