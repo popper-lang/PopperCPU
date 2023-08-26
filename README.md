@@ -5,7 +5,7 @@
 - [Project Goals](#projects-goals)
 - [Features](#features)
 - [Getting Started with PopperCPU](#getting-started-with-popper-cpu)
-- [PopperASM - Assembling for PopperCPU](#popperasm-assembling-for-poppercpu)
+- [PopperASM - Assembling for PopperCPU](#popperasm---assembling-for-poppercpu)
 - [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
