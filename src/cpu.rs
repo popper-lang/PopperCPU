@@ -1,11 +1,9 @@
-use crate::shared_mem::SharedMemory;
 use alloc::vec::Vec;
-use alloc::sync::Arc;
+use crate::shared_mem::SharedMemory;
 use crate::mmu::MMU;
 use crate::parser::Binary;
 use crate::stream::Stream;
 use crate::shared_mem::RAM_SIZE;
-use lazy_static::lazy_static;
 
 #[derive(Debug)]
 pub struct Cpu {
@@ -36,15 +34,6 @@ impl Cpu {
             stack: Vec::new(),
             debug_info: Stream::new(Vec::new())
         }
-    }
-
-    pub fn reset(&mut self) {
-        self.pc = 0;
-        self.sp = 0;
-        // self.registers.clear_all();
-        // self.flag.clear_all();
-        // self.ram.clear_all();
-        self.stack.clear();
     }
 
     pub fn push_stack(&mut self, value: u16) {
@@ -130,12 +119,6 @@ impl Cpu {
                 let result = u32::from_le_bytes(self.read(command.operand_type1, command.operand1)) + value ;
                 self.write(command.operand_type1,command.operand1, result.to_le_bytes());
             },
-            // 0x13 => { // sub
-            //     let value = self.interpret_value((command.operand_type2, command.operand2));
-            //     let result = self.read(command.operand_type1, command.operand1) - value;
-            //     self.write(command.operand_type1,command.operand1, result);
-            // },
-
             _ => panic!("Invalid opcode")
         }
     }
@@ -167,8 +150,6 @@ impl Cpu {
         self.ram.read_memory(1, &mut ram_buffer);
         println!("RAM: {:?}", ram_buffer);
         println!("Stack: {:?}", self.stack);
-        // println!("Memory: {:?}", &self.memory.memory[0..10]);
-
     }
 }
 

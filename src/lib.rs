@@ -8,10 +8,8 @@
 extern crate alloc;
 
 pub mod stream;
-pub mod registers;
 pub mod shared_mem;
 pub mod cpu;
-pub mod flag;
 pub mod parser;
 pub mod mmu;
 mod mutex;

@@ -22,6 +22,7 @@ impl AtomicRefCounter {
     }
 }
 
+
 pub struct Mutex<T> {
     data: UnsafeCell<T>,
     lock: AtomicRefCounter,
@@ -44,6 +45,7 @@ impl<T> Mutex<T> {
     }
 }
 
+#[allow(dead_code)]
 pub struct MutexGuard<'a, T> {
     data: &'a mut T,
     lock: &'a AtomicRefCounter,

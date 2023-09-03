@@ -1,4 +1,3 @@
-use alloc::vec;
 use super::Binary;
 use alloc::vec::Vec;
 
@@ -97,7 +96,7 @@ mod tests {
         let content = "000000010000000000000000000000000010001000100000001000000000000000000000000001000000010000000000000000000000000";
         let mut parser = BinParser::new(content);
         let res = parser.compile();
-        assert_eq!(res.is_ok(), true);
+        assert!(res.is_ok());
         assert_eq!(res.unwrap(), Binary {
             label: 0x1,
             opcode: 0x11,
