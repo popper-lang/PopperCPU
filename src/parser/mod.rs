@@ -1,5 +1,6 @@
 use alloc::vec::Vec;
 
+#[cfg(feature = "parse")]
 pub mod bin_parser;
 
 
