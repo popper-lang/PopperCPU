@@ -37,7 +37,7 @@ impl<T> Mutex<T> {
     }
 
     pub fn lock(&self) -> MutexGuard<T> {
-        self.lock.clone(); 
+        self.lock.clone();
         MutexGuard {
             data: unsafe { &mut *self.data.get() },
             lock: &self.lock,
