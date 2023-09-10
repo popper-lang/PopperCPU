@@ -26,8 +26,6 @@ impl Binary {
         bytes.push(self.operand_type2);
         bytes.extend_from_slice(&self.operand2);
         buffer.copy_from_slice(bytes.as_slice());
-        #[cfg(feature = "debug")]
-        println!("Binary: {:?}", buffer);
         buffer
     }
 }

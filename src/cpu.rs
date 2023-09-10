@@ -66,8 +66,6 @@ impl Cpu {
                 index = labels.pop().unwrap() + 5;
             }
             labels.push(index);
-            #[cfg(feature = "debug")]
-            dbg!(index);
             self.instructions.write_memory(index, &(bytes[4] as u32).to_le_bytes());
             self.instructions.write_memory(index + 1, &(bytes[5] as u32).to_le_bytes());
             self.instructions.write_memory(index + 2, &bytes[6..11]);
@@ -173,13 +171,6 @@ impl Cpu {
                 let operand1 = self.next_instruction();
                 let operand2_type = bytes!(self.next_instruction()) as u8;
                 let operand2 = self.next_instruction();
-                #[cfg(feature = "debug")]
-                {
-                    println!("Operand1 type: {:?}", operand1_type);
-                    println!("Operand1: {:?}", operand1);
-                    println!("Operand2 type: {:?}", operand2_type);
-                    println!("Operand2: {:?}", operand2);
-                }
                 let value = self.interpret_value((operand2_type, operand2));
                 self.write(operand1_type, operand1, value);
             },
