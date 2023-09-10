@@ -54,7 +54,7 @@ impl<'a> BinParser<'a> {
     }
 
     pub fn compiles(&mut self) -> Result<Vec<Binary>, &str> {
-        Ok(self.bin.split('\n').map(|x| x.replace(' ', "")).map(|x| {
+        Ok(self.bin.split('\n').filter(|x| !x.is_empty()).map(|x| x.replace(' ', "")).map(|x| {
             self.compile(x).unwrap()
         }).collect())
     }
