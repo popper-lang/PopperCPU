@@ -4,7 +4,6 @@
 )]
 #![feature(error_in_core)]
 
-
 extern crate alloc;
 
 use std::fs::read_to_string;

@@ -35,6 +35,7 @@ pub struct Cpu {
 
 impl Cpu {
     pub fn new(binary: Vec<Binary>) -> Self {
+        dbg!(binary);
         let memory = SharedMemory::new(RAM_SIZE);
         let register = memory.clone();
         let flag = memory.clone();
