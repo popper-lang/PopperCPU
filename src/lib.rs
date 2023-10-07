@@ -19,7 +19,6 @@ mod mutex;
 
 #[cfg(feature = "parse")]
 pub fn compile_to_binary_file(file_name: &str) -> Vec<Binary> {
-    use std::fs::read_to_string;
     let body = read_to_string(file_name).unwrap();
     let binary = compile_to_bin_string(body.as_str());
     binary

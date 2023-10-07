@@ -35,7 +35,6 @@ pub struct Cpu {
 
 impl Cpu {
     pub fn new(binary: Vec<Binary>) -> Self {
-        dbg!(&binary);
         let memory = SharedMemory::new(RAM_SIZE);
         let register = memory.clone();
         let flag = memory.clone();
@@ -116,23 +115,10 @@ impl Cpu {
         self.registers.write_memory(index, &value);
     }
 
-    pub fn read_flag(&self, index: usize) -> [u8; 4] {
-        let mut buffer = [0; 4];
-        self.flag.read_memory(index, &mut buffer);
-        buffer
-    }
-
-    pub fn write_flag(&mut self, index: usize, value: &[u8]) {
-        if index > 5 {
-            panic!("Invalid flag index");
-        }
-        self.flag.write_memory(index, value);
-    }
-
     pub fn write(&mut self, ty: u8, addr: [u8; 4], value: [u8; 4]) {
         match ty {
             0x01 => self.write_register(bytes!(addr) as usize, value),
-            0x03 => self.write_ram(bytes!(addr) as usize, value),
+            0x04 => self.write_ram(bytes!(addr) as usize, value),
             e => panic!("Invalid operand type:{:?}", e)
         }
     }
@@ -140,12 +126,12 @@ impl Cpu {
     pub fn read(&mut self, ty: u8, addr: [u8; 4]) -> [u8; 4] {
         match ty {
             0x01 => self.read_register(bytes!(addr) as usize),
-            0x03 => self.read_ram(bytes!(addr) as usize),
+            0x04 => self.read_ram(bytes!(addr) as usize),
             _ => panic!("Invalid operand type")
         }
     }
 
-    pub fn next_instruction(&mut self) -> [u8; 4] {
+    pub fn next_bytes(&mut self) -> [u8; 4] {
         let mut buffer = [0; 4];
 
         self.instructions.read_memory(self.pc, &mut buffer);
@@ -156,39 +142,64 @@ impl Cpu {
 
     pub fn interpret(&mut self) {
         self.load_instructions();
+
         while read_into_buffer!(self.flag, 0) == [0; 4] {
             self.interpret_instruction();
         }
-        #[cfg(feature = "debug")]
-        self.debug();
+
+        println!("{}", bytes!(read_into_buffer!(self.ram, 500)))
     }
 
     pub fn interpret_instruction(&mut self) {
-        let opcode_buffer = self.next_instruction();
+        let opcode_buffer = self.next_bytes();
         let opcode = bytes!(opcode_buffer) as u8;
         match opcode {
+            0x0 => self.flag.write_memory(0, &[1, 0, 0, 0]),
             0x11 => { // mov
-                let operand1_type = bytes!(self.next_instruction()) as u8;
-                let operand1 = self.next_instruction();
-                let operand2_type = bytes!(self.next_instruction()) as u8;
-                let operand2 = self.next_instruction();
+                let operand1_type = bytes!(self.next_bytes()) as u8;
+                let operand1 = self.next_bytes();
+                let operand2_type = bytes!(self.next_bytes()) as u8;
+                let operand2 = self.next_bytes();
                 let value = self.interpret_value((operand2_type, operand2));
                 self.write(operand1_type, operand1, value);
             },
             0x12 => { // add
-                let operand1_type = bytes!(self.next_instruction()) as u8;
-                let operand1 = self.next_instruction();
-                let operand2_type = bytes!(self.next_instruction()) as u8;
-                let operand2 = self.next_instruction();
+                let operand1_type = bytes!(self.next_bytes()) as u8;
+                let operand1 = self.next_bytes();
+                let operand2_type = bytes!(self.next_bytes()) as u8;
+                let operand2 = self.next_bytes();
                 let value = bytes!(self.interpret_value((operand2_type, operand2)));
                 let result = bytes!(self.read(operand1_type, operand1)) + value ;
                 self.write(operand1_type,operand1, result.to_le_bytes());
             },
+            0x17 => { // call
+                let operand1_type = bytes!(self.next_bytes()) as u8;
+                let operand1 = self.next_bytes();
+                self.write_ram(100, (self.pc as u32).to_le_bytes());
+                if operand1_type == 0x3 {
+                    self.pc = (bytes!(operand1) as usize - 1) *  5;
+                } else {
+                    panic!("Invalid operand type: {}", operand1_type)
+                }
+            },
             0x19 => { // int
-                let (_, _, _, _) = (self.next_instruction(), self.next_instruction(), self.next_instruction(), self.next_instruction());
+                let (_, _, _, _) = (self.next_bytes(), self.next_bytes(), self.next_bytes(), self.next_bytes());
 
                 // end of the program
                 self.flag.write_memory(0, &[0x1, 0x0, 0x0, 0x0]);
+            },
+            0x21 => { // ret
+                self.next_bytes();
+                self.next_bytes();
+                self.next_bytes();
+                self.next_bytes();
+                match bytes!(self.read_ram(100)) {
+                    0 => self.flag.write_memory(0, &[1, 0, 0, 0]),
+                    e => {
+                        self.pc = (e * 5 + 2) as usize;
+                        self.write_ram(100, [0; 4]);
+                    }
+                }
             }
             e => panic!("Invalid opcode: {:?}", e)
         };
@@ -216,15 +227,16 @@ impl Cpu {
         self.flag.read_memory(1, &mut flag_buffer);
         println!("Flag zc: {:?}", flag_buffer);
         let mut ram_buffer: [u8; 4] = [0; 4];
-        self.ram.read_memory(1, &mut ram_buffer);
-        println!("RAM {:#x}: {:?}",0x111 + 4, ram_buffer);
+        self.ram.read_memory(500, &mut ram_buffer);
+        println!("RAM {:#x}: {:?}",  500, ram_buffer);
         println!("Stack: {:?}", self.stack);
         let mut instruction_buffer = vec![[0; 4]; 4 * 5];
-        self.instructions.read_memory(10, &mut instruction_buffer[0]);
-        self.instructions.read_memory(11, &mut instruction_buffer[1]);
-        self.instructions.read_memory(12, &mut instruction_buffer[2]);
-        self.instructions.read_memory(13, &mut instruction_buffer[3]);
-        self.instructions.read_memory(14, &mut instruction_buffer[4]);
+        let index = 10;
+        self.instructions.read_memory(index * 5, &mut instruction_buffer[0]);
+        self.instructions.read_memory(index * 5 + 1, &mut instruction_buffer[1]);
+        self.instructions.read_memory(index * 5 + 2, &mut instruction_buffer[2]);
+        self.instructions.read_memory(index * 5 + 3, &mut instruction_buffer[3]);
+        self.instructions.read_memory(index * 5 + 4, &mut instruction_buffer[4]);
 
         println!("Instruction : {:?}", instruction_buffer[0]);
         println!("Instruction : {:?}", instruction_buffer[1]);
