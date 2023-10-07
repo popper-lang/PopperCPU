@@ -12,3 +12,5 @@ spin = "0.9.8"
 [features]
 debug = []
 parse = []
+plugin_io = ["debug"]
+plugins = ["plugin_io"]

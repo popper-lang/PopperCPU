@@ -7,6 +7,8 @@ trait Write<Err: Error> {
     fn flush(&mut self) -> Result<(), Err>;
     fn write_all(&mut self, buf: &[u8]) -> Result<(), Err>;
 }
+
+#[derive(Clone)]
 pub struct Stream {
     pub bytes: Vec<u8>
 }

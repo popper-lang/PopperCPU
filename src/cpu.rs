@@ -2,6 +2,11 @@ use alloc::vec::Vec;
 use crate::shared_mem::SharedMemory;
 use crate::mmu::MMU;
 use crate::parser::Binary;
+
+#[cfg(feature = "plugin_io")]
+use crate::plugin::io;
+use crate::plugin::Plugin;
+
 use crate::stream::Stream;
 use crate::shared_mem::RAM_SIZE;
 
@@ -30,7 +35,7 @@ pub struct Cpu {
     pub memory: SharedMemory,
     pub stack: Vec<u16>,
     pub debug_info: Stream,
-    pub binary: Vec<Binary>
+    pub binary: Vec<Binary>,
 }
 
 impl Cpu {
@@ -147,7 +152,8 @@ impl Cpu {
             self.interpret_instruction();
         }
 
-        println!("{}", bytes!(read_into_buffer!(self.ram, 500)))
+        self.handle_plugins();
+
     }
 
     pub fn interpret_instruction(&mut self) {
@@ -213,6 +219,11 @@ impl Cpu {
             0x03 => self.read_ram(u32::from_le_bytes(val.1) as usize),
             e => panic!("Invalid operand type {:?}", e)
         }
+    }
+
+    pub fn handle_plugins<'a>(&self) {
+        #[cfg(feature = "plugin_io")]
+        io::IoPlugin::handle(self.clone()).unwrap();
     }
 
     #[cfg(feature = "debug")]

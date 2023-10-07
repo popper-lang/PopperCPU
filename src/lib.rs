@@ -15,6 +15,7 @@ pub mod cpu;
 pub mod parser;
 pub mod mmu;
 mod mutex;
+mod plugin;
 
 
 #[cfg(feature = "parse")]
